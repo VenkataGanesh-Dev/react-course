@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+  <head>
+    <title>React Basics</title>
+
+    <head>
+      <!--
+  In this lesson:
+
+  1. React = External library that helps us create websites easier.
+
+  2. Load the React external library.
+
+  3. Set up React and use .render().
+
+  4. Reviewed basics of HTML and JavaScript.
+
+  5. JSX = Enhanced version of JavaScript.
+
+  6. Created elements directly with JSX.
+
+  7. Insert values into JSX elements.
+  -->
+    </head>
+  </head>
+  <body>
+    <!--Minimum amount of code to setup react-->
+    <div class="js-container"></div>
+
+    <!-- <script src="https://unpkg.com/supersimpledev@8.6.4/external-library.js"></script>  THIS IS THE EXTENAL LIBRAY EXAMPLE-->
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+      const button = <button>hello</button>; // This is a html element
+
+      const paragraph = <p>paragraph of text</p>;
+      {
+        /*
+      const container = document.querySelector('.js-container');
+      ReactDOM.createRoot(container).render(paragraph);
+      */
+      }
+
+      {
+        /*
+      const container = document.querySelector('.js-container');
+      ReactDOM.createRoot(container).render(button); // Render a html (or) button element // Display this button in container
+      */
+      }
+
+      {
+        /*
+      const container = document.querySelector('.js-container');
+      ReactDOM.createRoot(container).render('Welcome to SuperSimpleDev React Course');
+      */
+      }
+
+      //--- Use React to display multiple elements --- We can't save multiple elements in inside a variable but we can use <div> = Represent a container  -- purpose of <div> is contain other elements like button and paragraphs
+
+      //Code cleanup --- separate the html and javascript for better understanding
+      // this is js
+      const div = (
+        <div>
+          <button>hello</button>
+          <p>para {2 + 2} </p>
+        </div>
+      );
+
+      const container = document.querySelector(".js-container");
+      ReactDOM.createRoot(container).render(div);
+    </script>
+  </body>
+</html>

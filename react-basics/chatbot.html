@@ -1,0 +1,566 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Chatbot</title>
+    <!--pace inside an element = padding
+    Flexbox = create a flexible layout
+    Layout = how the elements are positioned
+    To use Flexbox: 
+    1. Create container around elements like: <div></div>
+    2. Add the property -- display:flex; to container
+    3. Use flexbox features
+    flex-grow = makes an element grow and take up the remaining space
+    justify-content = controls how the elements are displayed horizontally
+    When a block element (like <div>) is inside a flexbox:
+    - it no longer takes up the entire line
+    - it only takes up as much space as it needs to
+    align-items = controls how the elements are displayed vertically
+    height: 100vh;  vh = viewport height (the height of the browser)
+     1OOvh = 100% of the height of the browser
+     <body> has a default margin of -- 8px on all sides that why the play in the scroll when we put 100%vh -->
+    <style>
+      body {
+        font-family: Arial;
+        margin-top: 0px; /*we are removing the default marign in top and button of the body element*/
+        margin-bottom: 0px;
+      }
+      .send-button {
+        background-color: rgb(25, 135, 84);
+        color: white;
+        padding: 12px 20px;
+        margin-left: 10px;
+        border: none;
+        border-radius: 10px;
+        font-size: 15px;
+        cursor: pointer;
+      }
+
+      .chat-input {
+        padding: 12px 15px;
+        border-radius: 10px;
+        border-width: 1px;
+        font-size: 15px;
+        flex-grow: 1;
+      }
+
+      .chat-input-container {
+        display: flex;
+        margin-bottom: 60px;
+      }
+
+      .app-container {
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+
+        height: 100vh;
+
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+      }
+
+      .chat-message-user {
+        display: flex;
+        justify-content: end;
+        align-items: start;
+      }
+
+      .chat-message-robot {
+        display: flex;
+        align-items: start;
+      }
+
+      .chat-message-text {
+        background-color: #eeeeee;
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-right: 10px;
+        margin-left: 10px;
+        margin-bottom: 10px;
+        max-width: 300px;
+      }
+
+      .chat-message-profile {
+        width: 45px;
+      }
+
+      .chat-messages-container {
+        flex-grow: 1;
+        margin-top: 20px;
+        overflow: scroll;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+  <body>
+    <!--Minimum amount of code to setup react-->
+    <div class="js-container"></div>
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <!--Get a Response From the Chatbot-->
+    <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+      // These are { ChatMessages, setChatMessages } props from useState
+      function ChatInput({ chatMessages, setChatMessages }) {
+        // inputText -> current data
+        // setInputText -> updater function ,lets us update the function
+        // Everytime we change the text, We are going ot save it up here inside input text
+        // '' → an empty string (no characters) ---- that means nothing is inside it when it in initial
+        const [inputText, setInputText] = React.useState("");
+
+        /*  When onchange  run a function , it"s is going to give this function (one parameter) up here called a event &&&
+              Event is an object and it contains details about event or about the change. So one detail is event.target &&&
+                this event.target give us the element that we are typing in or that we changed , So in this case it is going to giveus this input element ,So react give us access to this input element automatically using event.target and now to get the text inside this input, we are going to use the property .value
+                // we need to save this text , So we can use it later when creating a chat message. To save this text , we are going to use state , state = save data that changes overtime like.. in the text in the text box*/
+
+        function saveInputText(event) {
+          setInputText(event.target.value);
+        }
+        // this is the component
+
+        // We dont have acess to set chatMessages inside this component, To solve this problem, We are going to learn a techinque called lifting the State Up  ,,, When we lifiting the State Up Then the component can share the (chatMessages,setChatMessages) Between these 2 components (These components states --  <ChatInput>   and <ChatMessages>)  This techinque is called lifting the State Up , By moving the state Up to an outer component,it lets us share state B/w multiple components
+
+        // This code have access to the ChatMessages, setChatMessages from the  function ChatInput({ ChatMessages, setChatMessages })
+        function sendMessage() {
+          const newChatMessages = [
+            ...chatMessages,
+            {
+              // Why? "inputText" displays the literal word inputText. inputText without quotes uses the actual text typed into the input box.
+              message: inputText,
+              sender: "user",
+              id: crypto.randomUUID(),
+            },
+          ];
+          //  This updates the chatMessages state with the array stored in newChatMessages.
+          setChatMessages(newChatMessages);
+          // State does not update immediately
+          //State is finished after all of code is finished
+          // This is a Object and it has a method called .getResponse
+          const response = Chatbot.getResponse(inputText);
+          setChatMessages([
+            ...newChatMessages,
+            {
+              message: response,
+              sender: "robot",
+              id: crypto.randomUUID(),
+            },
+          ]);
+
+          // Controlled Inputs -   setInputText is a updaterfunction if we put it in empty string that means after sending the message the input box is empty,  but it will not upate the html , We need to use this input text inside the HTML , we are going to give a input element a prop called value , value = lets us change the value of this input or text inside this input
+          setInputText("");
+        }
+
+        return (
+          <div className="chat-input-container">
+            {/*We cannot style a Fragment with CSS , we have to use the div*/}
+            {/* This is called a fragment -this is alternative to div - It wont'n insert extra div/}
+                                                    {/* We are returnig the one value from this function by using the Div Element */}
+            {/* Html providing us with some default elementa like.. div,  input,  button*/}
+            <input
+              placeholder="Send a message to Chatbot"
+              size="30"
+              onChange={saveInputText}
+              value={inputText} // This is set the value to be empty and it will make the  text box empty & to update the html we write the value in HTML
+              className="chat-input"
+            />
+            {/*Size is character it tells how many character it will fit */}
+            {/* Self closing tag */}
+            {/*  So to get the text in this text box, we can use a prop called onChange*/}
+            {/*  Yes bro! ✅ Basically, remember that React event handler props usually start with on.*/}
+            {/*  So onChange runs a function when we change the text inside an  <input>*/}
+            {/*  When onchande run a function , it"s is going to give this function (one parameter) up here called a event*/}
+            {/* In React to set the class attribute,We are going to give an element a prop called className=""
+            In Recta ,We use the className
+            React is a javascript code
+            Javascript already has a feature called  class
+            class si a Reserved word, That why we can't use the class in React*/}
+            <button onClick={sendMessage} className="send-button">
+              Send
+            </button>
+
+            {/* If we are trying to return the 2 values or 2 elements we get a Error ,We only return 1 value or 1 element , we can use div to avoid a problem */}
+          </div>
+        );
+
+        {
+          /* Every component function gets one parameter up her called props   &&&   This props parameter is a object ,it contains all the attributes that we give to this component */
+        }
+        {
+          /*Here, props is a parameter that receives the data passed to the ChatMessage component.*/
+        }
+
+        /*HINT: Can we use another name instead of props?
+
+        Yes! props is NOT a reserved JavaScript keyword.
+        It is a conventional parameter name used in React.
+
+        You can use:
+        - props
+        - data
+        - abc
+        - myProps
+
+        Example 1:
+        function ChatMessage(props) {
+          return <div>{props.message}</div>;
+        }
+
+        Example 2:
+        function ChatMessage(data) {
+          return <div>{data.message}</div>;
+        }
+
+        Example 3:
+        function ChatMessage(abc) {
+          return <div>{abc.message}</div>;
+        }
+
+        IMPORTANT:
+        If you change the parameter name, you must also
+        change that name everywhere inside the function.
+
+        Remember:
+        props.message and data.message work the same way
+        when their respective parameters receive the same props object.
+        */
+      }
+
+      function ChatMessage({ message, sender }) {
+        //Since the prop is a paramter up here, We can just destructure it ,directly at the top ,,,  this takes the message & sender property directly out of the first parameter an then saves them in a variable called message and a variable called sender . so it does the same thing as the code down here ---  const { message, sender } = props; but it an even shorter shortcut
+
+        //function ChatMessage(props) {
+
+        //To access the message property --- We use the   props.attribute name ex like props.message &&& If we are storing in variable that should be used later in future*/
+
+        // const message = props.message; -- This is full form of it
+        // This is shortcut is called destructing , because we are taking the stuffout of this object
+        // Remember: const { message } = props; --- means take the message property & sender property from the props object and put its value into a variable called message & sender
+
+        //const { message, sender } = props;
+
+        //const sender = props.sender;
+
+        //To access the sender attribute either useer or sender attibute, we can type props.sender
+
+        // If-Statements Directly Inside JSX
+
+        // the value robat is string because it in inside the double quotes""
+
+        /*
+        if (sender === "robot") {
+          return (
+            <div>
+              <img src="robot.png" width="50" /> {message}
+              //
+              Because the <img> is inline by default, and plain text can continue beside it.
+            </div>
+          );
+        }
+        */
+        {
+          /*
+          Ternary operaator: If the value1 is true then result is value2 ,else value3
+          Ternary operator = insert an if-else statement directly in the JSX
+          { } = save the result of the code into the prop
+        */
+        }
+        return (
+          <div
+            className={
+              sender === "user" ? "chat-message-user" : "chat-message-robot"
+            }
+          >
+            {/*If the value on the left is true , thenm tghe result will be the value on th right*/}
+            {/*This is shortcut for if-statement, we use a Guard operator (&&) for shorcut   */}
+            {/* Guard operator (&&): If the condition is true, display the element. If the condition is false, display nothing.
+            Example:
+            {sender === "robot" && <img src="robot.png" />}
+            If sender is "robot" → Display the image. Otherwise → Display
+            nothing. */}
+            {/*
+            Comparing strings using ===
+
+            1. Different strings:
+              "user" === "robot"  // false
+              Robot image is not displayed.
+
+            2. Same strings:
+              "user" === "user"  // true
+              User image is displayed.
+
+            Remember:
+            Same strings = true
+            Different strings = false
+          */}
+            {sender === "robot" && (
+              <img src="robot.png" className="chat-message-profile" />
+            )}
+            <div className="chat-message-text">{message}</div>
+            {/* In React, we still use <div> for layout purposes    &&&    We use the div beacuse we want to put the hello chatbot messange and img that why we use the div - it is a block level element it takes all the space entire line from start to end in website*/}
+            {/*How do we access it inside this component and use it? to do that , We are going to use a feature called (props)*/}
+            {/*Why we are writing the message in this is because we want to display the different messages &&& We are inserting javascript value/ data in {} curly brackets and as long as it results an value*/}
+            {/*  { } — curly braces let you write a JavaScript expression inside JSX.
+                                                    message — the variable that stores the text "Hello chatbot".
+                                                    {message} — React evaluates the variable and displays its value.
+                                                    message="Hello chatbot" → passes a string as a prop to a component.*/}
+            {sender === "user" && (
+              <img src="user.png" className="chat-message-profile" />
+            )}
+          </div>
+        );
+      }
+
+      // How to Get the Text in a Textbox
+      // React Best Practice Do not use the DOM manually (React is managing the website) , If we use dom manually, it might interfere with React ,,, instead We should use React features to get the text from a textbox
+      // chatMessages inside of {} is a prop , now access to everything it needs
+      function ChatMessages({ chatMessages }) {
+        {
+          /* // what is hook ? hook will insert features our component
+        // useEffect ia a one of the hook
+        // useEffect() ---  Run some code after the component is created (or) updated
+        // In our project, after we add the chat message , We want to run some code to scroll to the botom. So this this is the perfect situation for the useeffect()
+        // In react We should put the hooks at the top of the component and they should not inside anything (like dont put the hook inside of anif-statement or inside of function Ex: if(condition){  React.useEffect() }    or function fun() { Rect.useEffect() }
+        // As an remainder when we give a function to another function, We usally use an arrow function, because it is little bit cleaner
+
+        // React will run this useEffect() function - after the component is created
+        // React will run this useEffect() function - after every time the component is updated*/
+        }
+
+        {
+          /* 1. First parameter: Callback function – contains the code to execute.
+           2. Second parameter: Dependency array []– controls when the effect runs.
+           Remember: The second parameter is optional.
+           EX: useEffect(() => {
+              // Effect code
+              }, [dependency]);
+
+              Controls when useEffect runs [] = only run once,after the component is created
+                                           [chatMessages] = run this function every time chatMessages changes
+
+           Dependency array []– controls when the effect runs.
+           Best Practise: Give useEffect a dependency array to avoid running to often    
+            
+           Noraml javascript : in js we  use the dom to get the element ('.chat-messages-container');
+             Ex: document.querySelector('.chat-messages-container');
+
+            In React : ,We should not use the DOM manually. Instead we should use react features too get this element  ,We are going to use the  another hook called useRef() -- React.useRef()
+            UseRef = automatically save an HTML element from the component
+             React.useRef() --  This code creates a ref , ref = container with special React features
+             One special feature is we can give this ref or this container  to react and react automatically save an HTML element from the component
+        */
+        }
+
+        // React will take this HTML element save it inside this ref or inside this container
+        // null is an initial value
+        const chatMessagesRef = React.useRef(null);
+        // Ending of the variable name (  Elem  ) tells us that this variable contains an HTML
+        React.useEffect(() => {
+          // To access the HTML element saved inside a ref, we're going to go to use useEffect and we are going to type the name of the ref, Which is -- chatMessagesRef.current , Now the reason we put this code in use effect is because rembember useEffect Runs after the component is created. So we need to wait for the component to be created first  and then we can acess the HTML Element
+          const containerElem = chatMessagesRef.current;
+          if (containerElem) {
+            // It is for auto scrolling
+            containerElem.scrollTop = containerElem.scrollHeight;
+          }
+        }, [chatMessages]);
+        return (
+          <div
+            className="chat-messages-container" // React will take this HTML element save it inside this ref ,ref a prop
+            ref={chatMessagesRef}
+          >
+            {/* Onclick -> run a function we click
+                                            { } = save any type of value in a prop (including a function)
+                                              onClick ->  onClick is know as the event &&&
+                                              Event handler = run a function when we interact with the website
+                                              sendMessage -> sendMessage is know as event handler , It does something when this event happens or it handeles the Event
+                                              The Event prop always start with on and then this is the name of the Event like click and The Event prop  must use  camelCase -- camelCase means first word is lower case, and all otherwords start with a captial letter
+                                              NOte: --- We should not run the event handler function/ brackets Ex: --- onClick={sendMessage()} If we write the () -- So this will run the function  and then the result of the function will be  undefined , Then itis going to undefined into on click which doesn't work   instead , We should give the function directly to on click without running it so that is called the event handlers*/}
+            {/*<button onClick={sendMessage}>Send Message</button>*/}
+
+            {chatMessages.map((chatMessage) => {
+              return (
+                <ChatMessage
+                  // message is a prop and  {chatMessage.message} is a prop value
+                  message={chatMessage.message}
+                  sender={chatMessage.sender}
+                  key={chatMessage.id}
+                />
+              );
+            })}
+          </div>
+        );
+      }
+
+      {
+        /*NOTE:    Now using react, Now using react, we can actually create our own HTML Element like..  <ChatInput></ChatInput>   Then we canuse our own HTML elements  */
+      }
+      // Instead of  using avariable to save our app , The bet practise is to use component to create this app
+
+      function App() {
+        // Array = List of values
+        // We are going to save each chat message as an object , Object = groups related values together
+        // ChatMessages is just  a normal variable , When we update the chat , it will not updates the html ,,,,If we convert chat messages into state , When we update chat messages, it will update the HTML
+        // This is array destructuring EX: --- const [value, setVa1ue] = useState(nu11) ;
+        const [chatMessages, setChatMessages] = React.useState([
+          {
+            message: "hello chatbot",
+            sender: "user",
+            id: "id1",
+          },
+          {
+            message: "Hello! How can I help you?",
+            sender: "robot",
+            id: "id2",
+          },
+          {
+            message: "can you get me todays date?",
+            sender: "user",
+            id: "id3",
+          },
+          {
+            message: "Today is October 23",
+            sender: "robot",
+            id: "id4",
+          },
+          {
+            message: "how about flip a coin",
+            sender: "user",
+            id: "id5",
+          },
+          {
+            message: "Sure! You got tails",
+            sender: "robot",
+            id: "id6",
+          },
+        ]);
+        // 1.  The current value of chatMessages(The current data)
+        // 2. The second value is -- Function that updates the data &&& setChatMessages -- this is updater Function&&&If we use this function to update the data, React will update the HTML
+        //    convention for this function is a use set. And then the name of the data   &&&  In react We should not update the data directly , We always use the functin to update the data AND that's because this function tells react that the data changed and to update the HTML , If we update the data directly , react will not update the HTML
+        // This is shortcut const [chatMessage, setChatMessage] = React.useState for this  ---  const [chatMessages, setChatMessages] = array;   ,,, But we are not saving in the variable
+        // const [chatMessages, setChatMessages] = array; // Array destructring ,Because we are taking the stuff out of this array , We are deconstructing it ,,,  In  Array destructing   The order matters , so chatMessages ---   this will always gets the first value out of it , so this--- setChatMessages  will always get the second value out of the Array   (shortcut) ,,, the chatMesssages gets the 1st value out of the array ,, AND setChatMEssages gets the 2nd value out of the array
+        // const chatMessages = array[0];
+        // const setChatMessages = array[1];
+
+        {
+          /* this is HOw to Generate HTML &&& Key =helps React track changes in the array, Key has to be unique , We should give a a each component a key*/
+        }
+        {
+          /*  < → 	Starts a JSX element.
+        ChatMessage  → The name of your React component.
+        message → Prop name.
+        = → Assigns a value to the prop.
+        { } → Allows a JavaScript expression inside JSX &&& We want to  save the result of this code
+        chatMessage.message → The prop value being passed.*/
+        }
+
+        {
+          /*
+                  function sendMessage() {
+                  // In setChatMessages(We write the New value of chatMessages) ,So that update Function works is it's going to replace the entire chat messages array with new array
+                  // In React, We should not modify the data directly. We should always create a copy, and then modify the code . This helps React be more efficient.
+                  // This updater function will replace chat messages with new array and because we this updater function, react will re-generate the HTML ., So bacisally it will re-run the hole map function an it will update the function.
+                  // setChatMessages -> A function that updates the chatMessages state in React.
+
+                  setChatMessages([
+                    ...chatMessages, // ... This ia a spread Operator(...) -> Takes the value in array and copies them into a new array
+                    {
+                      message: "test", // Add a new chat message at the end
+                      sender: "user",
+                      id: crypto.randomUUID(),
+                    },
+                  ]);
+                }
+                */
+        }
+
+        return (
+          <div className="app-container">
+            {/*   REACT HAS A ANOTHER WAY TO GROUP THE ELEMENTS TOGETHER CALLED FRAGMENT (<></> ) -- TO use the fragment we have to remove the <div></div>   */}
+
+            {/*This is the shortcut*/}
+            {/* Here we need the chat messages array to generate to html  chatMessages.map   ,so lets provide the chatMessages using a prop ,means WE share the infromation/Adta to parent component to child component  (This prop is in the app component (we write this like this <chatMessages chatMessages= {chatMessages}/>
+                  the 1st  chatMessages is a    <ChatMessages />  ---  (((component  rendering)))   &
+                      2nd   chatMessages is prop name to pass the data &
+                      3nd  chatMessages=   --- {chatMessages} data ,in array is inside of it ,,,
+                      Naming convention used in the React Documentation is like this: component, prop, data
+                       & ) to accesss the elements by using the lifting up state ,,, we )*/}
+            <ChatMessages chatMessages={chatMessages} />
+            {/*We can insert any javascript code b/w curly brackets, as long as this coe results in a value, we can insert into this Html ,,  It will run the function and It will reurn the html from the fuction Then the curly brackets will insert the HTML into the div And Then display it on the page */}
+            {/* {ChatInput()} */}
+            {/* ------// THIS IS FUNCTION CALLING WITH {}BRACKETS  */}
+            {/* React has a special syntax ,We can use to insert a component , instead of using a curly brackets and reuuning the function we can type this code*/}
+            {/*This is Component Synatx , THis does same as above {ChatInput()}---   */}
+            {/* It does the same as above,  it runs the chat input and Then it inserts the result in the html */}
+            {/* This synatx have a big advantage & it looks like a html &  So we can think like we are creating our Own HTML element called ChatInput*/}
+            <ChatInput
+              chatMessages={chatMessages} // chatMessages is a value from state ,notice that chat messages is an array ,,, Using curly brackets {},We can save an array into this prop
+              setChatMessages={setChatMessages} // setChatMessages is a function from the state
+              // Inside chatInput we can access this 2 props
+            />
+            {/*We call this <ChatInput><ChatInput> --  an Element and this is the full form   &&&                 We can use self closing element shortcut tags when thereis nothing inside in com*/}
+            {/*---React = external library that helps us create websites easier IS THIS THE ONE WAY ---*/}
+
+            {/*Term	Example
+                JSX tag                    --- <ChatMessage />
+                JSX attribute              ---	message="hello chatbot"
+                Prop received by component ---	props.message
+                JSX element	               --- <ChatMessage message="hello chatbot" />
+
+
+              {/*
+              By the way, By default If the attributes just has double quotes like this.."hello chatbot" OR "user" OR "robot"  he value is string
+              */}
+
+            {/*
+              <ChatMessage message="hello chatbot" sender="user" />
+              <ChatMessage message="Hello! How can I help you?" sender="robot" />
+              <ChatMessage message="can you get me todays date?" sender="user" />
+              <ChatMessage message="Today is October 23" sender="robot" />
+              <ChatMessage message="how about flip a coin" sender="user" />
+              <ChatMessage message="Sure! You got tails" sender="robot" />
+              */}
+            {/*Props make our component reusable ,but just give it a different attribute or prop - props is message in this ex*/}
+            {/*"Use/render the ChatMessage component here --- <ChatMessage /> &&&
+                                                Component: ChatMessage
+                                                Prop: message
+                                                Prop value: " hello chatbot"
+                                                Displayed text:  hello chatbot"*/}
+            {/*We can add your own attributes like... message &&&   We are going to give an attribute a name like... message for ChatMessage and value like.. hello chatbot in "" quotes */}
+          </div>
+        );
+      }
+
+      {
+        /*
+        <App></App> uses the App component.
+
+        React displays the UI returned by the App component.
+
+        <App /> is the shorter syntax when there are no children
+        (nothing between <App> and </App>).
+
+        ReactDOM.createRoot(container).render(<App />);
+
+        Displays the App component inside the HTML container.
+      */
+      }
+
+      {
+        /*
+          The first line finds the HTML element and stores it in container.
+
+          The second line tells ReactDOM to create a React root connected to that existing HTML element.
+
+          We pass container because React needs to know exactly where to display the app. We are not creating a new HTML container; we're connecting React to the one that already exists.
+          */
+      }
+
+      const container = document.querySelector(".js-container");
+      ReactDOM.createRoot(container).render(<App />);
+    </script>
+  </body>
+</html>

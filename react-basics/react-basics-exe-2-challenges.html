@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+    <title>React Basics</title>
+
+    <head>
+      <!--
+WORD / SYMBOL             | MEANING
+------------------------------------------------------------
+const                     | Creates a variable that cannot be reassigned
+container                 | Variable name that stores the HTML element
+=                         | Assignment operator
+document                  | Represents the HTML page
+.                         | Accesses a property or method
+querySelector()           | Finds the first matching HTML element
+".js-container"           | CSS selector that selects the class js-container
+;                         | Marks the end of a statement
+
+ReactDOM                  | React DOM library
+createRoot()              | Creates a React root for the container
+container                 | HTML element where React will render
+render()                  | Renders React content into the root
+<App />                   | React component that we want to render
+()                        | Used to call methods and pass arguments
+
+HTML div                  | Container where React renders the application
+class                     | HTML attribute used to assign a class name
+
+REMEMBER:
+querySelector() = Find the HTML element
+createRoot()    = Create the React root
+render()        = Display the React component
+-->
+    </head>
+  </head>
+  <body>
+    <!--Minimum amount of code to setup react-->
+    <div class="js-container"></div>
+    <!--HTML element where React renders your application.   (OR)  React root container because we use it as the place where React renders our application.-->
+
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+      function ProductDetails({ name, price }) {
+        return (
+          <>
+            <p>{price}</p>
+            <p>Price: ${price}</p>
+            <button>Add to Cart</button>
+          </>
+        );
+      }
+
+      function App() {
+        return (
+          <>
+            <ProductDetails name="cotton Socks" price="Price: $10.90" />
+            <ProductDetails name="Tennis balls" price="Price: $6" />
+            <ProductDetails name="Plain T-Shirt" price="price: $7.99" />
+          </>
+        );  
+      }
+
+      const container = document.querySelector(".js-container");
+      ReactDOM.createRoot(container).render(<App />);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,322 @@
+<!doctype html>
+<!--STEP-1  CREATE A INDEX FILE-->
+<html>
+  <!--STEP-2  HTML STRUCTURE-->
+  <head>
+    <title>React Basics copy</title>
+  </head>
+  <body>
+    <!-- This line creates an empty HTML element where React can display your UI. -->
+    <!--He chose the name js-container to make it clear that this HTML element is a container that JavaScript will select and use.-->
+
+    <!-- Yes! You can use either single quotes ('') or double quotes ("") in both HTML attributes and JavaScript strings. Let's understand step by step.-->
+
+    <!-- div - Creates a container element on the webpage.-->
+    <!-- class - An HTML attribute used to give the element a class name.-->
+    <!-- "js-container" - The value of the class attribute. The class name is js-container.-->
+    <div class="button-container"></div>
+
+    <div class="paragraph-container"></div>
+
+    <div class="design-1c"></div>
+
+    <div class="productcost-container"></div>
+
+    <div class="date-container"></div>
+
+    <div class="time-container"></div>
+
+    <!--STEP-3  Load the libraries — React, ReactDOM, and Babel.-->
+
+    <!--react-dom.js — Connects React to the browser-->
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+
+    <!-- ReactDOM is a library that helps React display UI elements, such as buttons and headings, inside an HTML webpage. -->
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+
+    <!-- Babel is a JavaScript tool that transforms JSX into regular JavaScript so the browser can run it. -->
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+
+    <!-- STEP-4  Write JSX code inside the Babel script. -->
+
+    <!-- <script> tag is an HTML element used to include or write JavaScript code in an HTML file.-->
+    <!-- type="text/babel" — tells the Babel setup used in your tutorial to process this script as Babel code.
+    Inside the script, you can write JSX, such as <button>Good job!</button>.
+    Babel transforms the JSX into JavaScript that can run in the browser.-->
+    <script type="text/babel">
+      // STEP 5  is to create the button using JSX inside <script type="text/babel">.
+
+      /*
+        JSX stands for JavaScript XML.
+
+        It is a syntax that lets you write HTML-like elements inside JavaScript code when using React.
+
+        Example:
+        const button = <button>Good job!</button>;
+
+        // JS = JavaScript
+        // X = XML
+
+        Remember: JSX looks like HTML, but it is written inside JavaScript.
+        */
+
+      const button = <button>Good job!</button>; //<button>Good job!</button> — JSX describing the button.
+
+      const paragraph = <p>My name is Gani</p>;
+
+      const div = (
+        <div>
+          <p>Cotton socks</p>
+          <p>Price: ${10}</p>
+          <button>Add to Cart</button>
+        </div>
+      );
+
+      const productCost = 10 + 8 * 2;
+      //console.log(productCost);
+
+      //const para = <p>Product cost: ${productCost}</p>;
+      const shippingCost = 5;
+
+      const totaldiv = (
+        <div>
+          <p>Product cost: ${productCost}</p>
+          <p>Shipping cost: ${shippingCost}</p>
+          <p>Total ={productCost + shippingCost}</p>
+          <button>place your order</button>
+        </div>
+      );
+
+      //console.log(dayjs().format("MMMM D"));
+
+      const dat = <p>Today is {dayjs().format("MMMM D")}</p>;
+
+      setInterval(() => {
+        const tim = <p>Current time: {dayjs().format("HH:mm:ss")}</p>;
+        root.render(tim);
+      }, 1000);
+
+      // STEP 6  Write the HTML container
+
+      // This finds the <div class="js-container"></div> in your HTML.
+
+      /*
+      ① document
+
+      Represents the current webpage's HTML document. JavaScript uses it to access HTML elements.
+
+      ② . (dot between document and querySelector)
+
+      The dot between document and querySelector accesses a property or method belonging to document.
+
+      ③ querySelector
+
+      A JavaScript DOM method that finds the first HTML element matching a CSS selector.
+
+      ④ () — parentheses
+
+      Hold the argument you pass to the method. Here, the argument is '.js-container'.
+
+      ⑤ ' ' — single quotes
+
+      Mark the beginning and end of a JavaScript string. The string contains the text .js-container.
+
+      You can use double quotes instead: ".js-container".
+
+      ⑥ . inside '.js-container'
+
+      This dot is part of the CSS selector. It means select by class name.
+
+      ⑦ js-container
+
+      The class name you want to find in the HTML.
+
+      ⑧ ; — semicolon
+
+      Marks the end of the JavaScript statement. In this example, it is conventional to include it.
+      */
+      const container1 = document.querySelector(".button-container");
+      ReactDOM.createRoot(container1).render(button); // step 7  Render the button
+
+      const container2 = document.querySelector(".paragraph-container");
+      ReactDOM.createRoot(container2).render(paragraph);
+
+      const container3 = document.querySelector(".design-1c");
+      ReactDOM.createRoot(container3).render(div);
+
+      const container4 = document.querySelector(".productcost-container");
+      ReactDOM.createRoot(container4).render(totaldiv);
+
+      const container5 = document.querySelector(".date-container");
+      ReactDOM.createRoot(container5).render(dat);
+
+      const container6 = document.querySelector(".time-container");
+      const root = ReactDOM.createRoot(container6);
+
+      /*
+      2. Two React roots on the same container ❌
+
+      Avoid doing this:
+
+      const container = document.querySelector(".js-container");
+
+      ReactDOM.createRoot(container).render(button);
+      ReactDOM.createRoot(container).render(paragraph);
+
+      Why?
+
+      Both roots are trying to manage the same HTML container. This is not the intended way to render React content and can cause errors or unexpected behavior.
+
+
+      3. Recommended approach: One root for both elements ⭐
+
+      For your current example, use one root and render both elements together:
+
+      const button = <button>Good job!</button>;
+      const paragraph = <p>My name is Gani</p>;
+
+      const container = document.querySelector(".js-container");
+
+      ReactDOM.createRoot(container).render(
+        <div>
+          {button}
+          {paragraph}
+        </div>
+      );
+
+      Now React manages both elements inside one container.
+
+
+      Remember
+
+      - One container → one React root.
+      - Two different containers → you can create two React roots.
+      - For most React applications, use one root for the main application and render all its components inside it.
+      */
+
+      /*
+      REVISION NOTES: ReactDOM.createRoot(container).render(button);
+
+      ① ReactDOM
+
+      ReactDOM is a library that helps React display UI elements,
+      such as buttons and headings, inside an HTML webpage.
+
+      ② . (dot after ReactDOM)
+
+      The dot accesses a property or method belonging to ReactDOM.
+      Here, it accesses the createRoot method.
+
+      ③ createRoot
+
+      A ReactDOM method that creates a React root connected to
+      an HTML element where React can display its UI.
+
+      ④ () — parentheses after createRoot
+
+      Hold the argument passed to createRoot.
+      Here, the argument is container.
+
+      ⑤ container
+
+      The variable that stores the HTML element found using
+      document.querySelector('.js-container').
+
+      React will display its UI inside this HTML element.
+
+      ⑥ . (dot after createRoot(container))
+
+      The dot accesses a method on the object returned by
+      createRoot(container).
+
+      Here, it accesses the render method.
+
+      ⑦ render
+
+      A method that tells React to display the specified
+      React element inside the root.
+
+      ⑧ () — parentheses after render
+
+      Hold the value that React should display.
+      Here, the argument is button.
+
+      ⑨ button
+
+      The variable that stores the JSX element created earlier.
+
+      Example:
+      const button = <button>Good job!</button>;
+
+      React displays this button inside the container.
+
+      ⑩ ; — semicolon
+
+      Marks the end of the JavaScript statement.
+      In this example, it is conventional to include it.
+
+      OVERALL RESULT:
+
+      ReactDOM.createRoot(container).render(button);
+
+      1. ReactDOM accesses the React DOM library.
+      2. createRoot(container) connects React to the HTML container.
+      3. render(button) tells React to display the button there.
+      4. The button appears on the webpage.
+      */
+    </script>
+  </body>
+</html>
+
+<!--
+REACT LIBRARIES - REVISION NOTES
+
+1. React (react.js)
+   - A JavaScript library used to build user interfaces (UI).
+   - Helps us create and manage UI elements like buttons,
+     headings, and components.
+
+2. ReactDOM (react-dom.js)
+   - Connects React UI to the browser's DOM.
+   - Helps React render UI inside an HTML element.
+   - Without loading ReactDOM, ReactDOM.createRoot()
+     will not be available in this setup.
+
+3. Babel (babel.js)
+   - Transforms JSX into JavaScript that can run in the browser.
+   - JSX looks like HTML but is written inside JavaScript.
+   - Browsers do not directly understand JSX syntax.
+
+IMPORTANT CODE:
+
+<div class="js-container"></div>
+- Creates an empty HTML container for React to render UI.
+
+const button = <button>Good job!</button>;
+- Creates a JSX description of a button and stores it
+  in the button variable.
+
+const container = document.querySelector('.js-container');
+- Finds the HTML element with the class "js-container".
+
+ReactDOM.createRoot(container).render(button);
+- createRoot(container): Creates a React root connected
+  to the HTML container.
+- render(button): Tells React to display the button there.
+
+REMEMBER:
+- React = Build and manage the UI.
+- ReactDOM = Render the UI into the browser DOM.
+- Babel = Transform JSX into JavaScript.
+- HTML container = The place where React renders the UI.
+
+EXECUTION FLOW:
+1. Create the HTML container.
+2. Load React, ReactDOM, and Babel.
+3. Write JSX.
+4. Find the HTML container.
+5. Create the React root.
+6. Render the JSX.
+-->
