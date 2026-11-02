@@ -3,20 +3,19 @@ import "./HomePage.css";
 
 export function HomePage() {
   return (
-    // We can only return 1 element from a Componentttt
+    // We can only return 1 element from a Component
 
-    // Added React useState examples
     <>
       <title>Ecommerce-project</title>
 
       <div className="header">
         <div className="left-section">
-          <a href="index.html" className="header-link">
+          <a href="/" className="header-link">
             <img className="logo" src="/images/logo-white.png" />
             {/* Vite serves images from the public folder using /images/ */}
             <img className="mobile-logo" src="/images/mobile-logo-white.png" />
           </a>
-        </div>
+        </div>  
 
         <div className="middle-section">
           <input className="search-bar" type="text" placeholder="Search" />
@@ -27,11 +26,11 @@ export function HomePage() {
         </div>
 
         <div className="right-section">
-          <a className="orders-link header-link" href="orders.html">
+          <a className="orders-link header-link" href="/orders">
             <span className="orders-text">Orders</span>
           </a>
 
-          <a className="cart-link header-link" href="checkout.html">
+          <a className="cart-link header-link" href="/checkout">
             <img className="cart-icon" src="/images/icons/cart-icon.png" />
             <div className="cart-quantity">3</div>
             <div className="cart-text">Cart</div>
