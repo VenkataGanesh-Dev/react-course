@@ -3,7 +3,9 @@ import "./HomePage.css";
 
 export function HomePage() {
   return (
-    // We can only return 1 element from a Component
+    // We can only return 1 element from a Componentttt
+
+    // Added React useState examples
     <>
       <title>Ecommerce-project</title>
 
