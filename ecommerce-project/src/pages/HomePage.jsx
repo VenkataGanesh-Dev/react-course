@@ -5,6 +5,8 @@ export function HomePage() {
   return (
     // We can only return 1 element from a Component
     <>
+      <title>Ecommerce-project</title>
+
       <div className="header">
         <div className="left-section">
           <a href="index.html" className="header-link">
