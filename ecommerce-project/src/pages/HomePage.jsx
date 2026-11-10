@@ -3,10 +3,50 @@ import { products } from "../../starting-code/data/products";
 import "./HomePage.css";
 
 export function HomePage() {
+  // This is --- HOW we fetch data or get data from the backend --- , We use the build in function fecth()
+
+  // To fetch data  OR  To get the data from the backend is to use the function fetch() --  fecth() is a bulit in function. It's is provided by javascript
+  // We are going to create a string and we are going to put the URL that we want to get the data from this URL --  localhost:3000/api/products
+  // AND We cannot save the data like this in VARIABLE like this -- EX:  const products = fetch('http://localhost:3000/api/products');   and thats because when we contact a backend,it takes time for this code to reach the backend  and to get a response.
+  // We call this Asynchronous code = code that does not finishes right away
+  // fetch() returns a Promise
+  // Promise = Lets us wait for asynchronous code to finish ,, a promise has a method called .then()
+
+  // So that's a review of how a promise Works or code works :  fetch("http://localhost:3000/api/products") -- This code contacts the backend to get some data ,but it takes some time for the backend to respond,, so code is gonna keep going line by line ( return () -- Ecommerce-project return   code lines ),,, THEN at some point in the future, THis is going to finish(  fetch("http://localhost:3000/api/products")   ), We going to get response from the backend, When it finishes in th future, it will run the function inside .then(),,  after fetch gesta response from the BACKEND it will save it as a parameter in this inner function( inner function means .then( response ))  called response
+  //   Request:  BY the way When we contact the backend using fetch() this is called a Request.
+  //   Response: When the backend responds with some data this is called a response. So this parameter contains the  response from the backend
+  // It finishes at future
+  // THis backend is actually running on our own computer --  localhost:3000  our own computer ,,,
+
+  //                                                 -->   localhost:5137(Frontend)
+  // We are actually contacting the own computer                                      |
+  //                                                 -->   localhost:3000(Backend)
+
+  fetch("http://localhost:3000/api/products")
+    .then((response) => {
+      //--> To get the products data , This response object has a method called .json = .json gives us the data attached to the response ,,, in this case it gives us the product data
+      // --> response.json(); is also asynchronous, WE cannot save this in a variable  EX: const products = response.json() ,,,instead this is also a promise , so we have to use   .then() again
+      {
+        /*.then() is a Promise method.
+        It runs when the previous Promise is fulfilled.
+        response is the parameter that receives the server's response.
+        response.json() reads the response body and parses JSON into JavaScript data.
+        return passes the parsed data to the next .then().
+        */
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+    });
+  //data is the parameter that receives the parsed JavaScript data.
+  //console.log(data) displays the data in the browser console.
+  //  NOTE: The backend can also run on the same computer as the frontend or website
   return (
     // We can only return 1 element from a Component
 
     <>
+      <title>Ecommerce Project</title>
       {/*We are rendering the Header component */}
       <Header />
 
