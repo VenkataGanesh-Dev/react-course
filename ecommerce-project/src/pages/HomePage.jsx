@@ -3,14 +3,14 @@ import { useEffect, useState } from "react";
 import { Header } from "../components/Header";
 import "./HomePage.css";
 
-export function HomePage() {
+
+// prop --> { cart } 
+export function HomePage({ cart }) {
   // How to we use loop down here(means in map loop down in this ) to generate the HTMl, to do that, we need to sabvethe products data inside the state
 
   // use State gives us an array with 2 values. The 1st value is name of the data AND 2nd value of useState is the updater function, the updater function lets update the value and regenerate the HTMl,, we usally name the updater function set and name of the data (setProducts)   AND b/w these brackets we're going to put the starting value of the products ,, this is a empty array [] at starting  in useState([])
   // NOW after We get the products from the BACKEND, We are going to save it into the state() ,,, so only thing to note is that the name of the data from the useState (--proudcts--) has to match the name down here  means   -- {products.map --   in return section
   const [products, setProducts] = useState([]);
-
-  const [cart, setCart] = useState([]);
 
   // This is --- HOW we fetch data or get data from the backend --- , We use the build in function fecth()
 
@@ -101,14 +101,6 @@ during development.
     // We set the server proxy configutarion in vite.config that why we remove the  http://localhost:3000
     axios.get("/api/products").then((response) => {
       setProducts(response.data); // useing the updater function , This will means --setProducts(response.data); -- save the products data into here means -- products from the use state ,, after   USING this means -- products -- from the use state and the its is going to use this means -- products from use state -- TO generate the HTML in the products.map     ,,, so now we are using the data from the backend to generate the HTML. and we dont need too import the products dummy file
-    });
-
-    // THE way this works in the backend is running on the http localhost:3000 and after this we add the URL path, Each URL path gives us different  data. for EX:   /api/cart-items = cart data ,,, so URL path can be actually anything we want. whoever create thebackend what the URl paths will be
-    // A common name convention is to start  the url path with slash   /api   API = Application Programming Interface
-    //   Starting with   /api = these url paths are for the interacting with the backend
-    //   Whenever we make a request to the backend  is going to take some time to get the response. so we need to wait for this code to finish using .then
-    axios.get("/api/cart-items").then((response) => {
-      setCart(response.data);
     });
   }, []);
   // NOTE:  IN the console that useEffect runs twice instead of once. so this is totally normal and it uis caused by using strict mode in our app . strict mode runs useEffect twice to help us catch bugs and it only does this during development.
