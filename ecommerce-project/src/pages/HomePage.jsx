@@ -1,3 +1,4 @@
+import axios from "axios"; // axios = cleaner way to make requests to the backend
 import { Header } from "../components/Header";
 import { products } from "../../starting-code/data/products";
 import "./HomePage.css";
@@ -22,23 +23,29 @@ export function HomePage() {
   // We are actually contacting the own computer                                      |
   //                                                 -->   localhost:3000(Backend)
 
-  fetch("http://localhost:3000/api/products")
-    .then((response) => {
-      //--> To get the products data , This response object has a method called .json = .json gives us the data attached to the response ,,, in this case it gives us the product data
-      // --> response.json(); is also asynchronous, WE cannot save this in a variable  EX: const products = response.json() ,,,instead this is also a promise , so we have to use   .then() again
-      {
-        /*.then() is a Promise method.
+  // This is   axios.get    also do the same as  this --- fetch("http://localhost:3000/api/products"),,but except the data from the backend will be saved directly inside the response (response.data)
+
+  axios.get("http://localhost:3000/api/products").then((response) => {
+    console.log(response.data);
+  });
+  //--> To get the products data , This response object has a method called .json = .json gives us the data attached to the response ,,, in this case it gives us the product data
+  // --> response.json(); is also asynchronous, WE cannot save this in a variable  EX: const products = response.json() ,,,instead this is also a promise , so we have to use   .then() again
+  {
+    /*.then() is a Promise method.
         It runs when the previous Promise is fulfilled.
         response is the parameter that receives the server's response.
         response.json() reads the response body and parses JSON into JavaScript data.
         return passes the parsed data to the next .then().
         */
-      }
-      return response.json();
+  }
+  {
+    /*   return response.json();
     })
     .then((data) => {
       console.log(data);
     });
+    */
+  }
   //data is the parameter that receives the parsed JavaScript data.
   //console.log(data) displays the data in the browser console.
   //  NOTE: The backend can also run on the same computer as the frontend or website
