@@ -3,7 +3,19 @@ import "./header.css";
 // <Link> = go to another page without reloading
 //  componets folder = The componets folder is for shared components and
 //  pages folder = The components that are specific to a page
-export function Header() {
+
+// ({ cart }) This is called object destructuring of props.
+// { cart } → Receives the cart property from the parent's props object.
+// One-line interview answer: The parent component passes data through props, and the child component receives that data through its props parameter.
+export function Header({ cart }) {
+  let totalQuantity = 0;
+  //Then loop through the cart .forEach()
+  // The inner function (means (cartItem)=> { }) will get one parameter which is each item in the cart and each cart item has a quantity ,So we are going to add to this totalQuantity variable
+  cart.forEach((cartItem) => {
+    totalQuantity += cartItem.quantity;
+    //totalQuantity = totalQuantity + cartItem.quantity;
+  });
+
   return (
     <div className="header">
       <div className="left-section">
@@ -29,7 +41,7 @@ export function Header() {
 
         <Link className="cart-link header-link" to="/checkout">
           <img className="cart-icon" src="/images/icons/cart-icon.png" />
-          <div className="cart-quantity">3</div>
+          <div className="cart-quantity">{totalQuantity}</div>
           <div className="cart-text">Cart</div>
         </Link>
       </div>
