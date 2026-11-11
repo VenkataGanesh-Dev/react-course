@@ -1,9 +1,15 @@
 import axios from "axios"; // axios = cleaner way to make requests to the backend
+import { useEffect, useState } from "react";
 import { Header } from "../components/Header";
-import { products } from "../../starting-code/data/products";
 import "./HomePage.css";
 
 export function HomePage() {
+  // How to we use loop down here(means in map loop down in this ) to generate the HTMl, to do that, we need to sabvethe products data inside the state
+
+  // use State gives us an array with 2 values. The 1st value is name of the data AND 2nd value of useState is the updater function, the updater function lets update the value and regenerate the HTMl,, we usally name the updater function set and name of the data (SetProducts)   AND b/w these brackets we're going to put the starting value of the products ,, this is a empty array [] at starting  in useState([])
+  // NOW after We get the products from the BACKEND, We are going to save it into the state() ,,, so only thing to note is that the name of the data from the useState (--proudcts--) has to match the name down here  means   -- {products.map --   in return section 
+  const[products, SetProducts] = useState([])
+
   // This is --- HOW we fetch data or get data from the backend --- , We use the build in function fecth()
 
   // To fetch data  OR  To get the data from the backend is to use the function fetch() --  fecth() is a bulit in function. It's is provided by javascript
@@ -23,11 +29,79 @@ export function HomePage() {
   // We are actually contacting the own computer                                      |
   //                                                 -->   localhost:3000(Backend)
 
-  // This is   axios.get    also do the same as  this --- fetch("http://localhost:3000/api/products"),,but except the data from the backend will be saved directly inside the response (response.data)
+  // This is   axios.get    also do the same as  this --- fetch("http://localhost:3000/api/products"),,but except the data from the backend will be saved directly inside the response (response.data) ,,,Now lets use the backend to generate the HTML instead of using the products file that we had before.  ,, BUT we have a problem -- This code is directly inside the homepage component. that means whenever the home page changes or rerenders,it will run this code again and send another request to BACKEND , howevere we just need to load the products once on this page. WE dont ned to load the products over and over again , to make this code run once , we can put inside a useEffect
 
-  axios.get("http://localhost:3000/api/products").then((response) => {
-    console.log(response.data);
-  });
+  /*
+QUICK COMPARISON – useEffect()
+
+QUICK SHORTCUT COMPARISON:
+
+Syntax                          When does it run?
+
+useEffect(() => {}, [])         After initial mount(When component is created)
+useEffect(() => {}, [count])    After mount and when count changes.
+useEffect(() => {})             After every render.
+                               
+
+1. EMPTY DEPENDENCY ARRAY []
+
+useEffect(() => {}, []);
+
+Meaning:
+- Runs after the component is created (initial mount).
+- Runs after React displays the component on the screen.
+- Does not run again when the component normally re-renders.
+
+Example:
+Fetching products from the backend when the page first loads.
+
+
+2. DEPENDENCY ARRAY WITH A VARIABLE [count]
+
+useEffect(() => {}, [count]);
+
+Meaning:
+- Runs after the component is created (initial mount).
+- Runs again whenever the count value changes.
+- If count does not change, the effect does not run again
+  just because of a normal re-render.
+
+Example:
+Performing an action whenever the count value changes.
+
+
+3. WITHOUT DEPENDENCY ARRAY
+
+useEffect(() => {});
+
+Meaning:
+- Runs after the component is created (initial mount).
+- Runs again after every re-render of the component.
+- It does not matter whether a particular state value changes
+  or not. Every render triggers the effect.
+
+Example:
+Running an action after every component render.
+
+IMPORTANT:
+- [] = Runs after initial mount only.
+- [count] = Runs after initial mount and when count changes.
+- No array = Runs after every render.
+
+NOTE:
+In React Strict Mode, effects may run an extra time
+during development.
+*/
+
+  // useEffect = Lets us control when some code runs , BY default, useeffect runs this code every time the component is created or  updated ,,, BUT We can can control this. At the end of this function , we are going to add a comma  AND  Empty array(is a dependency array) = lets us control when useEffect runs ,lets control when useEffect runs.      []  = only run once after the component is created. AND that's exactly what we need here.
+
+  useEffect(() => {
+    axios.get("http://localhost:3000/api/products").then((response) => {
+      SetProducts(response.data); // useing the updater function , This will means --SetProducts(response.data); -- save the products data into here means -- products from the use state ,, after   USING this means -- products -- from the use state and the its is going to use this means -- products from use state -- TO generate the HTML in the products.map     ,,, so now we are using the data from the backend to generate the HTML. and we dont need too import the products dummy file 
+    });
+  }, []);
+  // NOTE:  IN the console that useEffect runs twice instead of once. so this is totally normal and it uis caused by using strict mode in our app . strict mode runs useEffect twice to help us catch bugs and it only does this during development.
+
   //--> To get the products data , This response object has a method called .json = .json gives us the data attached to the response ,,, in this case it gives us the product data
   // --> response.json(); is also asynchronous, WE cannot save this in a variable  EX: const products = response.json() ,,,instead this is also a promise , so we have to use   .then() again
   {
