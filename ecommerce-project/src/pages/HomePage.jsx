@@ -6,9 +6,9 @@ import "./HomePage.css";
 export function HomePage() {
   // How to we use loop down here(means in map loop down in this ) to generate the HTMl, to do that, we need to sabvethe products data inside the state
 
-  // use State gives us an array with 2 values. The 1st value is name of the data AND 2nd value of useState is the updater function, the updater function lets update the value and regenerate the HTMl,, we usally name the updater function set and name of the data (SetProducts)   AND b/w these brackets we're going to put the starting value of the products ,, this is a empty array [] at starting  in useState([])
+  // use State gives us an array with 2 values. The 1st value is name of the data AND 2nd value of useState is the updater function, the updater function lets update the value and regenerate the HTMl,, we usally name the updater function set and name of the data (setProducts)   AND b/w these brackets we're going to put the starting value of the products ,, this is a empty array [] at starting  in useState([])
   // NOW after We get the products from the BACKEND, We are going to save it into the state() ,,, so only thing to note is that the name of the data from the useState (--proudcts--) has to match the name down here  means   -- {products.map --   in return section
-  const [products, SetProducts] = useState([]);
+  const [products, setProducts] = useState([]);
 
   const [cart, setCart] = useState([]);
 
@@ -98,16 +98,17 @@ during development.
   // useEffect = Lets us control when some code runs , BY default, useeffect runs this code every time the component is created or  updated ,,, BUT We can can control this. At the end of this function , we are going to add a comma  AND  Empty array(is a dependency array) = lets us control when useEffect runs ,lets control when useEffect runs.      []  = only run once after the component is created. AND that's exactly what we need here.
 
   useEffect(() => {
-    axios.get("http://localhost:3000/api/products").then((response) => {
-      SetProducts(response.data); // useing the updater function , This will means --SetProducts(response.data); -- save the products data into here means -- products from the use state ,, after   USING this means -- products -- from the use state and the its is going to use this means -- products from use state -- TO generate the HTML in the products.map     ,,, so now we are using the data from the backend to generate the HTML. and we dont need too import the products dummy file
+    // We set the server proxy configutarion in vite.config that why we remove the  http://localhost:3000
+    axios.get("/api/products").then((response) => {
+      setProducts(response.data); // useing the updater function , This will means --setProducts(response.data); -- save the products data into here means -- products from the use state ,, after   USING this means -- products -- from the use state and the its is going to use this means -- products from use state -- TO generate the HTML in the products.map     ,,, so now we are using the data from the backend to generate the HTML. and we dont need too import the products dummy file
     });
 
     // THE way this works in the backend is running on the http localhost:3000 and after this we add the URL path, Each URL path gives us different  data. for EX:   /api/cart-items = cart data ,,, so URL path can be actually anything we want. whoever create thebackend what the URl paths will be
     // A common name convention is to start  the url path with slash   /api   API = Application Programming Interface
     //   Starting with   /api = these url paths are for the interacting with the backend
     //   Whenever we make a request to the backend  is going to take some time to get the response. so we need to wait for this code to finish using .then
-    axios.get("http://localhost:3000/api/cart-items").then((response) => {
-      setCart(response);
+    axios.get("/api/cart-items").then((response) => {
+      setCart(response.data);
     });
   }, []);
   // NOTE:  IN the console that useEffect runs twice instead of once. so this is totally normal and it uis caused by using strict mode in our app . strict mode runs useEffect twice to help us catch bugs and it only does this during development.
@@ -147,7 +148,7 @@ during development.
       pass the cart into header using a prop AND then inside the header we are going to get the cartfrom the props  -- this in in header of the header file -- export function Header( cart ) shortcut
        export function Header(props) {  -- this is fill form for above -- 
        const cart = props.cart*/}
-      <Header cart= {cart}/>
+      <Header cart={cart} />
       <div className="home-page">
         <div className="products-grid">
           {/*products is a array and we are using the .map (.map takes each value in an array and tranforms it  ) array methods  to loop through an array ,And (product) in the brackets is just a variable name */}
