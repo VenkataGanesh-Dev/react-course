@@ -1,10 +1,10 @@
 import axios from "axios"; // axios = cleaner way to make requests to the backend
 import { useEffect, useState } from "react";
 import { Header } from "../components/Header";
+import { formatMoney } from "../utils/money";
 import "./HomePage.css";
 
-
-// prop --> { cart } 
+// prop --> { cart }
 export function HomePage({ cart }) {
   // How to we use loop down here(means in map loop down in this ) to generate the HTMl, to do that, we need to sabvethe products data inside the state
 
@@ -173,7 +173,12 @@ during development.
                 {/*NOTE:  $(product.priceCents / 100) --- This converts no into an string 
                 .toFixed(2)  --- we are tel1ing (2) decimals to show (how many decimals to show) */}
                 <div className="product-price">
-                  ${(product.priceCents / 100).toFixed(2)}
+                  {/*Code	Meaning
+                  formatMoney	Function reference
+                  formatMoney()	Calls the function
+                  formatMoney(product.priceCents)	Calls the function and passes the price
+                  {formatMoney(product.priceCents)}	Calls the function inside JSX and displays its returned value*/}
+                  {formatMoney(product.priceCents)}
                 </div>
 
                 <div className="product-quantity-container">

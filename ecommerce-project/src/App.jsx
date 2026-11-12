@@ -1,4 +1,4 @@
-import  axios  from "axios";
+import axios from "axios";
 import { Routes, Route } from "react-router";
 import { useState, useEffect } from "react";
 import { HomePage } from "./pages/HomePage.JSX";
@@ -17,7 +17,8 @@ function App() {
   //   Starting with   /api = these url paths are for the interacting with the backend
   //   Whenever we make a request to the backend  is going to take some time to get the response. so we need to wait for this code to finish using .then
   useEffect(() => {
-    axios.get("/api/cart-items").then((response) => {
+    // At the app component where we load the cart and at the end of this url  -->  ?expand=product - this is called a query parameter. A query parameter lets us add additinal information to our request , when backend recives query parameter, its gonna add the product details to the cart ,its going to expand the cart with product details
+    axios.get("/api/cart-items?expand=product").then((response) => {
       setCart(response.data);
     });
   }, []);
