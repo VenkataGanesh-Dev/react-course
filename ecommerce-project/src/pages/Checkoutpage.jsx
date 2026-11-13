@@ -7,6 +7,20 @@ import "./CheckoutPage.css";
 // WE are going to use the cart to generate the HTML for the checkout page  , So first make sure to pass that we pass the cart to the checkout page using this prop--> parent  cart = {cart}  to child {cart} in this export function CheckoutPage(cart) {}
 export function CheckoutPage({ cart }) {
   const [deliveryOptions, setDeliveryOptions] = useState([]);
+
+  // As a starting value , we are going to use null because the payment summary is going to be an object,it is easier to check if the object is not loaded if we set it to null at the start
+  {
+    /*
+    3. Remember the difference
+    Code	Initial value
+    useState(null)	null
+    useState([])	Empty array
+    useState({})	Empty object
+    useState([null])	Array containing null
+    */
+  }
+  const [paymentSummary, setPaymentSummary] = useState(null);
+
   {
     /*
     Let's understand the Promise flow:
@@ -36,6 +50,10 @@ export function CheckoutPage({ cart }) {
       .then((response) => {
         setDeliveryOptions(response.data);
       });
+    // we are going to use the use the axios to get the payment summary from the backend.
+    axios.get("/api/payment-summary").then((response) => {
+      setPaymentSummary(response.data);
+    });
   }, []);
 
   return (
@@ -87,8 +105,8 @@ export function CheckoutPage({ cart }) {
                     <div className="delivery-date">
                       Delivery date:
                       {dayjs(
-                        selectedDeliveryOption.estimatedDeliveryTimeMS,
-                      ).format("dddd", "MMMM", "D")}
+                        selectedDeliveryOption.estimatedDeliveryTimeMs,
+                      ).format("dddd, MMMM D")}
                     </div>
 
                     <div className="cart-item-details-grid">
@@ -183,38 +201,55 @@ export function CheckoutPage({ cart }) {
                 );
               })}
           </div>
-
+          {/*payment summary using data from the backend.*/}
           <div className="payment-summary">
             <div className="payment-summary-title">Payment Summary</div>
+            {/*  We only want to display this , if the payment summary is loaded ,otherwise we don't have this information
+             -- So tis checks if the paymentSummary object exists, if its null at the start , its not going to run the rest of the code
+             */}
 
-            <div className="payment-summary-row">
-              <div>Items (3):</div>
-              <div className="payment-summary-money">$42.75</div>
-            </div>
+            {paymentSummary && (
+              <>
+                <div className="payment-summary-row">
+                  <div>Items {paymentSummary.totalItems}:</div>
+                  <div className="payment-summary-money">
+                    {formatMoney(paymentSummary.productCostCents)}
+                  </div>
+                </div>
 
-            <div className="payment-summary-row">
-              <div>Shipping &amp; handling:</div>
-              <div className="payment-summary-money">$4.99</div>
-            </div>
+                <div className="payment-summary-row">
+                  <div>Shipping &amp; handling:</div>
+                  <div className="payment-summary-money">
+                    {formatMoney(paymentSummary.shippingCostCents)}
+                  </div>
+                </div>
 
-            <div className="payment-summary-row subtotal-row">
-              <div>Total before tax:</div>
-              <div className="payment-summary-money">$47.74</div>
-            </div>
+                <div className="payment-summary-row subtotal-row">
+                  <div>Total before tax:</div>
+                  <div className="payment-summary-money">
+                    {formatMoney(paymentSummary.totalCostBeforeTaxCents)}
+                  </div>
+                </div>
 
-            <div className="payment-summary-row">
-              <div>Estimated tax (10%):</div>
-              <div className="payment-summary-money">$4.77</div>
-            </div>
+                <div className="payment-summary-row">
+                  <div>Estimated tax (10%):</div>
+                  <div className="payment-summary-money">
+                    {formatMoney(paymentSummary.taxCents)}
+                  </div>
+                </div>
 
-            <div className="payment-summary-row total-row">
-              <div>Order total:</div>
-              <div className="payment-summary-money">$52.51</div>
-            </div>
+                <div className="payment-summary-row total-row">
+                  <div>Order total:</div>
+                  <div className="payment-summary-money">
+                    {formatMoney(paymentSummary.totalCostCents)}{" "}
+                  </div>
+                </div>
 
-            <button className="place-order-button button-primary">
-              Place your order
-            </button>
+                <button className="place-order-button button-primary">
+                  Place your order
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
