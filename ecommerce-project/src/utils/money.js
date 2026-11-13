@@ -7,5 +7,5 @@ export function formatMoney(amountCents) {
   // - $ displays the dollar symbol.
   // - ${} allows us to insert a JavaScript expression inside a string.
   // So this function lets us convert any amount cents into this format. At the end, return this value from the function
-  `$${(amountCents / 100).toFixed(2)}`;
+  return `$${(amountCents / 100).toFixed(2)}`;
 }
