@@ -36,7 +36,8 @@ function App() {
 
       {/*<Route path="/" element={<HomePage />}></Route>*/}
       <Route path="checkout" element={<CheckoutPage cart={cart} />} />
-      <Route path="orders" element={<OrdersPage />} />
+      {/*  NOw header needs the cart in order to display the quantity ,,, So we need to share the cart with the orders page*/}
+      <Route path="orders" element={<OrdersPage cart={cart} />} />
       <Route path="tracking" element={<Tracking />} />
     </Routes>
   );
