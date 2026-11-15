@@ -1,7 +1,7 @@
 import axios from "axios"; // axios = cleaner way to make requests to the backend
 import { useEffect, useState } from "react";
-import { Header } from "../components/Header";
-import { formatMoney } from "../utils/money";
+import { Header } from "../../components/Header";
+import { ProductsGrid } from "./ProductsGrid";
 import "./HomePage.css";
 
 // prop --> { cart }
@@ -142,74 +142,52 @@ during development.
        const cart = props.cart*/}
       <Header cart={cart} />
       <div className="home-page">
-        <div className="products-grid">
-          {/*products is a array and we are using the .map (.map takes each value in an array and tranforms it  ) array methods  to loop through an array ,And (product) in the brackets is just a variable name */}
+        {/* So we need to give it the products as prop
+        Part	                  ---  Meaning
+        ProductsGrid            ---	Name of the child component
+        products (left side)    ---	Prop name
+        {products} (right side) ---	JavaScript variable containing your products arra
+        
+        Left products = Prop name.
+        Right {products} = Parent's variable.
+        together( Left products   &    Right {products}) = Passing data from parent to child using props.
+        
+        */}
 
-          {/* So basically takes each product object and transforms it into this HTML (HTML means an product-container)*/}
-          {products.map((product) => {
-            return (
-              // When we loop through an array like this, We need to give each element a key prop, key = key helps react keep track of changes in the array
-              <div key={product.id} className="product-container">
-                <div className="product-image-container">
-                  <img className="product-image" src={product.image} />
-                </div>
+        {/* 
+         ---  Parent – HomePage.jsx  ---
 
-                <div className="product-name limit-text-to-2-lines">
-                  {product.name}
-                </div>
 
-                <div className="product-rating-container">
-                  <img
-                    className="product-rating-stars"
-                    // Each rating has an image We have to multipy by 10 to get the image name
-                    // We use the templete string to insert the values --   `/images/ratings/rating-${product.rating.stars * 10}.png`  (` `) They allow us to insert JavaScript values inside a string.  string written inside backticks. ${ }   This is called interpolation. It inserts a JavaScript expression into a template literal.
-                    src={`/images/ratings/rating-${product.rating.stars * 10}.png`}
-                  />
-                  <div className="product-rating-count link-primary">
-                    {product.rating.count}
-                  </div>
-                </div>
-                {/* We usally save money i cents , Because many programmmings languages have Trouble calculating decimal numbers , NOW we have to display into dollars to convert back to dollars we are going to divide by 100 EX: 1 dollars = 100 cents*/}
-                {/*NOTE:  $(product.priceCents / 100) --- This converts no into an string 
-                .toFixed(2)  --- we are tel1ing (2) decimals to show (how many decimals to show) */}
-                <div className="product-price">
-                  {/*Code	Meaning
-                  formatMoney	Function reference
-                  formatMoney()	Calls the function
-                  formatMoney(product.priceCents)	Calls the function and passes the price
-                  {formatMoney(product.priceCents)}	Calls the function inside JSX and displays its returned value*/}
-                  {formatMoney(product.priceCents)}
-                </div>
+        Passing data from Parent to Child using Props.
 
-                <div className="product-quantity-container">
-                  <select>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                  </select>
-                </div>
+        products = Prop name.
+        {products} = Parent's JavaScript variable.
 
-                <div className="product-spacer"></div>
+        We are sending the products data to ProductsGrid.
+        <ProductsGrid products={products} />
+      */}
 
-                <div className="added-to-cart">
-                  <img src="/images/icons/checkmark.png" />
-                  Added
-                </div>
+        {/*
+        ---  Child – ProductsGrid.jsx  ---
 
-                <button className="add-to-cart-button button-primary">
-                  Add to Cart
-                </button>
-              </div>
-            );
-          })}
-        </div>
+
+        export function ProductsGrid({ products }) {
+
+
+          { products } receives the products prop from the parent.
+
+          Props are used to pass data from Parent to Child.
+          products contains the data sent by HomePage.
+
+
+          console.log(products);
+        */}
+
+        {/* // Parent = Sends data
+            // Child = Receives data
+            // Props = Pass data from Parent to Child */}
+
+        <ProductsGrid products={products} />
       </div>
     </>
   );
