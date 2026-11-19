@@ -20,9 +20,11 @@ export function OrdersPage({ cart }) {
 
   useEffect(() => {
     // Query parameters : • expand-products (optional): include full product details
-    axios.get("/api/orders?expand=products").then((response) => {
+    const fetchOrderspageData = async () => {
+      const response = await axios.get("/api/orders?expand=products");
       setOrders(response.data);
-    });
+    };
+    fetchOrderspageData();
   }, []);
 
   return (

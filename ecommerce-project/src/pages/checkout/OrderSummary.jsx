@@ -2,11 +2,12 @@ import { DeliveryOptions } from "./DeliveryOptions";
 import dayjs from "dayjs";
 import { formatMoney } from "../../utils/money";
 
-export function OrderSummary({ deliveryOptions, cart }) {
+export function OrderSummary({ deliveryOptions, cart, setCart }) {
   return (
     <div className="order-summary">
       {/* if the cart is empty, We di=ont need to select a delivery option
-                     IT works like a if ,else if  deliveryOptions > 0     is TRUE it runs the rest of the code  */}
+      IT works like a if ,else if  deliveryOptions > 0     is TRUE it runs the rest of the code  
+      */}
       {deliveryOptions.length > 0 &&
         cart.map((cartItem) => {
           //   (deliveryOption) is the inner function it recives each delivery... The way that .find works is it's is going to loop through each deliveryOptions and the first function  --   (deliveryOption) => {},  that returns TRUE is going to be the result
@@ -54,6 +55,7 @@ export function OrderSummary({ deliveryOptions, cart }) {
                 <DeliveryOptions
                   deliveryOptions={deliveryOptions}
                   cartItem={cartItem}
+                  setCart={setCart}
                 />
               </div>
             </div>

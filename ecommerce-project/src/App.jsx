@@ -17,10 +17,14 @@ function App() {
   //   Starting with   /api = these url paths are for the interacting with the backend
   //   Whenever we make a request to the backend  is going to take some time to get the response. so we need to wait for this code to finish using .then
   useEffect(() => {
-    // At the app component where we load the cart and at the end of this url  -->  ?expand=product - this is called a query parameter. A query parameter lets us add additinal information to our request , when backend recives query parameter, its gonna add the product details to the cart ,its going to expand the cart with product details
-    axios.get("/api/cart-items?expand=product").then((response) => {
+    const fetchAppData = async () => {
+      // At the app component where we load the cart and at the end of this url  -->  ?expand=product - this is called a query parameter. A query parameter lets us add additinal information to our request , when backend recives query parameter, its gonna add the product details to the cart ,its going to expand the cart with product details
+      // Re-render = React runs the component function again.
+      //DOM update = React applies the necessary changes to the actual page.
+      const response = await axios.get("/api/cart-items?expand=product");
       setCart(response.data);
-    });
+    };
+    fetchAppData();
   }, []);
 
   return (
@@ -35,7 +39,10 @@ function App() {
       <Route index element={<HomePage cart={cart} />} />
 
       {/*<Route path="/" element={<HomePage />}></Route>*/}
-      <Route path="checkout" element={<CheckoutPage cart={cart} />} />
+      <Route
+        path="checkout"
+        element={<CheckoutPage cart={cart} setCart={setCart} />}
+      />
       {/*  NOw header needs the cart in order to display the quantity ,,, So we need to share the cart with the orders page*/}
       <Route path="orders" element={<OrdersPage cart={cart} />} />
       <Route path="tracking" element={<Tracking />} />
@@ -44,3 +51,141 @@ function App() {
 }
 
 export default App;
+
+{
+  /*
+  # useEffect + async/await + Axios – Step-by-Step Execution Flow
+
+  CODE:
+  
+  useEffect(() => {
+    const fetchAppData = async () => {
+      const response = await axios.get("/api/cart-items?expand=product");
+      setCart(response.data);
+    };
+
+    fetchAppData();
+  }, []);
+
+
+  STEP 1: useEffect()
+  -------------------
+  - React runs the effect after the component renders.
+  - The code inside the callback starts executing.
+
+
+  STEP 2: Define the async function
+  ---------------------------------
+  const fetchAppData = async () => {
+
+  - Creates a function named fetchAppData.
+  - async allows us to use await inside this function.
+  - The function is only defined here; it does not execute yet.
+
+
+  STEP 3: Call the function
+  -------------------------
+  fetchAppData();
+
+  - Calls the fetchAppData function.
+  - Now the function starts executing.
+
+
+  STEP 4: Send the API request
+  ----------------------------
+  const response = await axios.get("/api/cart-items?expand=product");
+
+  - axios.get() sends a GET request to the backend.
+  - await waits for the Promise to settle.
+  - After a successful response, the complete Axios response
+    object is stored in the response variable.
+
+
+  STEP 5: Access the actual data
+  ------------------------------
+  response.data
+
+  - response = Complete Axios response object.
+  - response.data = Actual data returned by the backend.
+
+
+  STEP 6: Update React state
+  --------------------------
+  setCart(response.data);
+
+  - Passes the actual data to setCart().
+  - Updates the cart state.
+  - React schedules a re-render with the updated cart data.
+
+
+  STEP 7: Function finishes
+  -------------------------
+  };
+
+  - Closes the fetchAppData function.
+
+
+  STEP 8: Dependency array
+  ------------------------
+  }, []);
+
+  - Empty dependency array means the effect runs after
+    the initial render.
+  - React Strict Mode can run an extra effect setup
+    in development.
+
+
+  COMPLETE EXECUTION FLOW – REMEMBER THIS ORDER
+  ----------------------------------------------
+
+  1. Component renders
+          ↓
+  2. useEffect() runs
+          ↓
+  3. Define fetchAppData()
+          ↓
+  4. Call fetchAppData()
+          ↓
+  5. axios.get() sends API request
+          ↓
+  6. await waits for API response
+          ↓
+  7. Store complete response in response variable
+          ↓
+  8. response.data accesses actual cart data
+          ↓
+  9. setCart(response.data) updates cart state
+          ↓
+  10. React re-renders with updated cart data
+
+
+  IMPORTANT JAVASCRIPT CONCEPTS
+  -----------------------------
+
+  useEffect()   = Runs side effects after rendering.
+  async         = Declares an asynchronous function.
+  await         = Waits for a Promise to settle.
+  axios.get()   = Sends a GET API request.
+  response      = Complete Axios response object.
+  response.data = Actual response data.
+  setCart()     = Updates React state.
+  []            = Empty dependency array.
+
+
+  IMPORTANT NOTE
+  --------------
+
+  Defining a function is different from calling a function.
+
+  Function definition:
+  const fetchAppData = async () => {
+    // Function code
+  };
+
+  Function call:
+  fetchAppData();
+
+  The API request starts when the function is called
+  and execution reaches axios.get().
+*/
+}

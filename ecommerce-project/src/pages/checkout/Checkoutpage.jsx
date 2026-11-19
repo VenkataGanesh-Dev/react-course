@@ -29,7 +29,7 @@ import { PaymentSummary } from "./PaymentSummary";
 }
 
 // WE are going to use the cart to generate the HTML for the checkout page  , So first make sure to pass that we pass the cart to the checkout page using this prop--> parent  cart = {cart}  to child {cart} in this export function CheckoutPage(cart) {}
-export function CheckoutPage({ cart }) {
+export function CheckoutPage({ cart, setCart }) {
   const [deliveryOptions, setDeliveryOptions] = useState([]);
 
   // As a starting value , we are going to use null because the payment summary is going to be an object,it is easier to check if the object is not loaded if we set it to null at the start
@@ -69,15 +69,18 @@ export function CheckoutPage({ cart }) {
 */
   }
   useEffect(() => {
-    axios
-      .get("/api/delivery-options?expand=estimatedDeliveryTime")
-      .then((response) => {
-        setDeliveryOptions(response.data);
-      });
-    // we are going to use the use the axios to get the payment summary from the backend.
-    axios.get("/api/payment-summary").then((response) => {
+    const fetchCheckoutData = async () => {
+      // We are using let ,because we have two requests here and we might want to reuse this variable
+      let response = await axios.get(
+        "/api/delivery-options?expand=estimatedDeliveryTime",
+      );
+      setDeliveryOptions(response.data);
+      // we are going to use the use the axios to get the payment summary from the backend.
+      // Async Await = Lets us write the asynchronous code like normal code
+      response = await axios.get("/api/payment-summary");
       setPaymentSummary(response.data);
-    });
+    };
+    fetchCheckoutData();
   }, []);
 
   return (
@@ -112,7 +115,11 @@ export function CheckoutPage({ cart }) {
         <div className="page-title">Review your order</div>
 
         <div className="checkout-grid">
-          <OrderSummary cart={cart} deliveryOptions={deliveryOptions} />
+          <OrderSummary
+            cart={cart}
+            deliveryOptions={deliveryOptions}
+            setCart={setCart}
+          />
           <PaymentSummary paymentSummary={paymentSummary} />
         </div>
       </div>
