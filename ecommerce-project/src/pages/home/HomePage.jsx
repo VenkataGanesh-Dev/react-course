@@ -100,7 +100,7 @@ during development.
   // Async Await = lets us write the asynchronous code like normal code (OR) code runs line by line
   // IN react we have a problem with using async  wait and useEffect  As a review async infront of a function,this function now return a promise. That's because this function has som asynchronous code inside or code that takes time to finsih(   .get("/api/products")   ) that why it has to return a promise ,,,
   // NOTE:   --- PROBLEM: problem is the inner function in useEffect should not return a promise. it should only return nothing or a cleanup function  . A cleanup function is useful if we want to do some cleanup when the component is removed. so because this inner function is returning a promise,,, IT'S sort of breaking the rules of useEffect. SOLUTION: --- To solve this WE usally create a new function inside a useEffect
-  // SOLUTION: --- When we are using   async await   inside useEffect,,, WE need to create a new function and then run the function-- NOW because we are inside an async function, can use await and , it will not mess up useEffect (---useEffect(async () => {   this is wrong we have a problem---)
+  // SOLUTION: --- When we are using   async await   inside useEffect,,, WE need to create a new function and then run the function-- NOW because we are inside an async function, can use await and , it will not mess up useEffect (---useEffect(async () => {   this is wrong we have a problem---)      
   useEffect(() => {
     const fetchHomeData = async () => {
       // We set the server proxy configutarion in vite.config that why we remove the  http://localhost:3000
