@@ -1,3 +1,4 @@
+import axios from "axios";
 import { DeliveryOptions } from "./DeliveryOptions";
 import dayjs from "dayjs";
 import { formatMoney } from "../../utils/money";
@@ -16,6 +17,16 @@ export function OrderSummary({ deliveryOptions, cart, loadCart }) {
               return deliveryOption.id === cartItem.deliveryOptionId;
             },
           );
+
+          // I am going to create the function inside this loop because i need access to this cart item to delete. so in here we will create this function const delete
+          const deleteCartItem = async () => {
+            // This send a a request with type delete
+            // my backend recive a request called  DELETE/api/cart-items/:productId  and this will delete the cart item a product from the cart
+            // The product id is saved inside cart item
+            // This will delete product from cart, So after deleting the product, Lets reload the cart
+            await axios.delete(`/api/cart-items/${cartItem.productId}`);
+            await loadCart();
+          };
           return (
             // When we loop through an array, each elememt needs a key property.
             <div key={cartItem.productId} className="cart-item-container">
@@ -46,7 +57,10 @@ export function OrderSummary({ deliveryOptions, cart, loadCart }) {
                     <span className="update-quantity-link link-primary">
                       Update
                     </span>
-                    <span className="delete-quantity-link link-primary">
+                    <span
+                      className="delete-quantity-link link-primary"
+                      onClick={deleteCartItem}
+                    >
                       Delete
                     </span>
                   </div>
