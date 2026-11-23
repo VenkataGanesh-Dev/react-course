@@ -5,7 +5,7 @@ import { ProductsGrid } from "./ProductsGrid";
 import "./HomePage.css";
 
 // prop --> { cart }
-export function HomePage({ cart }) {
+export function HomePage({ cart, loadCart }) {
   // How to we use loop down here(means in map loop down in this ) to generate the HTMl, to do that, we need to sabvethe products data inside the state
 
   // use State gives us an array with 2 values. The 1st value is name of the data AND 2nd value of useState is the updater function, the updater function lets update the value and regenerate the HTMl,, we usally name the updater function set and name of the data (setProducts)   AND b/w these brackets we're going to put the starting value of the products ,, this is a empty array [] at starting  in useState([])
@@ -100,7 +100,7 @@ during development.
   // Async Await = lets us write the asynchronous code like normal code (OR) code runs line by line
   // IN react we have a problem with using async  wait and useEffect  As a review async infront of a function,this function now return a promise. That's because this function has som asynchronous code inside or code that takes time to finsih(   .get("/api/products")   ) that why it has to return a promise ,,,
   // NOTE:   --- PROBLEM: problem is the inner function in useEffect should not return a promise. it should only return nothing or a cleanup function  . A cleanup function is useful if we want to do some cleanup when the component is removed. so because this inner function is returning a promise,,, IT'S sort of breaking the rules of useEffect. SOLUTION: --- To solve this WE usally create a new function inside a useEffect
-  // SOLUTION: --- When we are using   async await   inside useEffect,,, WE need to create a new function and then run the function-- NOW because we are inside an async function, can use await and , it will not mess up useEffect (---useEffect(async () => {   this is wrong we have a problem---)      
+  // SOLUTION: --- When we are using   async await   inside useEffect,,, WE need to create a new function and then run the function-- NOW because we are inside an async function, can use await and , it will not mess up useEffect (---useEffect(async () => {   this is wrong we have a problem---)
   useEffect(() => {
     const fetchHomeData = async () => {
       // We set the server proxy configutarion in vite.config that why we remove the  http://localhost:3000
@@ -108,7 +108,7 @@ during development.
       // using the updater function , This will means --setProducts(response.data); -- save the products data into here means -- products from the use state ,, after   USING this means -- products -- from the use state and the its is going to use this means -- products from use state -- TO generate the HTML in the products.map     ,,, so now we are using the data from the backend to generate the HTML. and we dont need too import the products dummy file
       setProducts(response.data);
     };
-      // It gets the same data as before it uses async  await. so remember when we are using async await inside useEffect, we need to crete a new function and then run the function ,,, Otherwise it will break the RULES OF useEffect ,,, SO lets go back and  WE will use use async and await in the app component ,where we get the cart. 
+    // It gets the same data as before it uses async  await. so remember when we are using async await inside useEffect, we need to crete a new function and then run the function ,,, Otherwise it will break the RULES OF useEffect ,,, SO lets go back and  WE will use use async and await in the app component ,where we get the cart.
     fetchHomeData();
   }, []);
   // NOTE:  IN the console that useEffect runs twice instead of once. so this is totally normal and it uis caused by using strict mode in our app . strict mode runs useEffect twice to help us catch bugs and it only does this during development.
@@ -195,7 +195,7 @@ during development.
             // Child = Receives data
             // Props = Pass data from Parent to Child */}
 
-        <ProductsGrid products={products} />
+        <ProductsGrid products={products} loadCart={loadCart} />
       </div>
     </>
   );

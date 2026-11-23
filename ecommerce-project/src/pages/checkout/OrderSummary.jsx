@@ -2,7 +2,7 @@ import { DeliveryOptions } from "./DeliveryOptions";
 import dayjs from "dayjs";
 import { formatMoney } from "../../utils/money";
 
-export function OrderSummary({ deliveryOptions, cart, setCart }) {
+export function OrderSummary({ deliveryOptions, cart, loadCart }) {
   return (
     <div className="order-summary">
       {/* if the cart is empty, We di=ont need to select a delivery option
@@ -53,9 +53,9 @@ export function OrderSummary({ deliveryOptions, cart, setCart }) {
                 </div>
 
                 <DeliveryOptions
-                  deliveryOptions={deliveryOptions}
                   cartItem={cartItem}
-                  setCart={setCart}
+                  deliveryOptions={deliveryOptions}
+                  loadCart={loadCart}
                 />
               </div>
             </div>

@@ -29,7 +29,7 @@ import { PaymentSummary } from "./PaymentSummary";
 }
 
 // WE are going to use the cart to generate the HTML for the checkout page  , So first make sure to pass that we pass the cart to the checkout page using this prop--> parent  cart = {cart}  to child {cart} in this export function CheckoutPage(cart) {}
-export function CheckoutPage({ cart, setCart }) {
+export function CheckoutPage({ cart, loadCart }) {
   const [deliveryOptions, setDeliveryOptions] = useState([]);
 
   // As a starting value , we are going to use null because the payment summary is going to be an object,it is easier to check if the object is not loaded if we set it to null at the start
@@ -81,7 +81,9 @@ export function CheckoutPage({ cart, setCart }) {
       setPaymentSummary(response.data);
     };
     fetchCheckoutData();
-  }, []);
+    //  [] depemdency array = determines when useEffect runs, It runs only once
+    // [value] = when ever value changes it will re-run useEffect
+  }, [cart]); //In this case When ever cart changes it will re run the useEffect and update the payment summary
 
   return (
     <>
@@ -118,7 +120,7 @@ export function CheckoutPage({ cart, setCart }) {
           <OrderSummary
             cart={cart}
             deliveryOptions={deliveryOptions}
-            setCart={setCart}
+            loadCart={loadCart}
           />
           <PaymentSummary paymentSummary={paymentSummary} />
         </div>
